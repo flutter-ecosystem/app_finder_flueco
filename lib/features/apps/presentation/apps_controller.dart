@@ -20,15 +20,14 @@ class AppsController extends ChangeNotifier {
     notifyListeners();
 
     allApps = await repository.loadApps();
-    results = searchEngine.search(allApps, query);
 
     isLoading = false;
     notifyListeners();
   }
 
-  void updateQuery(String value) {
+  Future<void> updateQuery(String value) async {
     query = value;
-    results = searchEngine.search(allApps, query);
+    results = await searchEngine.search(allApps, query);
     notifyListeners();
   }
 

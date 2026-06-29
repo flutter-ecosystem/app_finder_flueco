@@ -5,3 +5,6 @@
 build/
 
 .fvm/
+.env
+.env.*
+!.env.example
