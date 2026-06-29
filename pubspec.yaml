@@ -1,0 +1,19 @@
+name: app_finder_flueco
+description: Minimal dark neumorphic app finder built with Flueco.
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flueco: ^0.0.1-alpha.6
+  provider: ^6.1.2
+  diacritic: ^0.1.6
+  messaging: ^0.3.1
+  flueco_messaging: ^0.0.1-alpha.5
+
+flutter:
+  uses-material-design: true
