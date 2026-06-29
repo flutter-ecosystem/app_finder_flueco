@@ -52,7 +52,8 @@ class _AppsHomeView extends StatelessWidget {
                   const Expanded(
                     child: Text(
                       'App Finder',
-                      style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
                     ),
                   ),
                   IconButton(
@@ -69,7 +70,8 @@ class _AppsHomeView extends StatelessWidget {
               ),
               const SizedBox(height: 22),
               NeuContainer(
-                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
                 borderRadius: 22,
                 child: TextField(
                   onChanged: controller.updateQuery,
@@ -82,7 +84,8 @@ class _AppsHomeView extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               if (controller.isLoading)
-                const Expanded(child: Center(child: CircularProgressIndicator()))
+                const Expanded(
+                    child: Center(child: CircularProgressIndicator()))
               else if (controller.results.isEmpty)
                 const Expanded(
                   child: Center(
@@ -91,39 +94,41 @@ class _AppsHomeView extends StatelessWidget {
                 )
               else
                 Expanded(
-                  child: ListView.separated(
+                  child: GridView.builder(
+                    padding: const EdgeInsets.only(bottom: 12),
                     itemCount: controller.results.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 14),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      mainAxisExtent: 170,
+                    ),
                     itemBuilder: (context, index) {
                       final result = controller.results[index];
                       final app = result.app;
                       return NeuContainer(
                         onTap: () => controller.launch(app),
-                        child: Row(
-                          children: [
-                            _AppIcon(icon: app.icon),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(app.name, style: Theme.of(context).textTheme.titleMedium),
-                                  const SizedBox(height: 4),
-                                  Text(app.packageName, maxLines: 1, overflow: TextOverflow.ellipsis),
-                                  const SizedBox(height: 8),
-                                  Wrap(
-                                    spacing: 6,
-                                    runSpacing: 6,
-                                    children: [
-                                      if (app.category != 'undefined') _Chip(app.category),
-                                      ...result.reasons.take(2).map(_Chip.new),
-                                    ],
-                                  ),
-                                ],
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              _AppIcon(icon: app.icon),
+                              const SizedBox(height: 10),
+                              Flexible(
+                                child: Text(
+                                  app.name,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                  style: Theme.of(context).textTheme.titleSmall,
+                                ),
                               ),
-                            ),
-                            const Icon(Icons.north_east_rounded, size: 18),
-                          ],
+                            ],
+                          ),
                         ),
                       );
                     },
@@ -150,26 +155,10 @@ class _AppIcon extends StatelessWidget {
         width: 54,
         height: 54,
         color: const Color(0xFF0A1426),
-        child: icon == null ? const Icon(Icons.apps_rounded) : Image.memory(icon!, fit: BoxFit.cover),
+        child: icon == null
+            ? const Icon(Icons.apps_rounded)
+            : Image.memory(icon!, fit: BoxFit.cover),
       ),
-    );
-  }
-}
-
-class _Chip extends StatelessWidget {
-  const _Chip(this.label);
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
-      decoration: BoxDecoration(
-        color: const Color(0x332C7DDA),
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: const Color(0x224EA1FF)),
-      ),
-      child: Text(label, style: const TextStyle(fontSize: 11, color: Color(0xFFBBD6FF))),
     );
   }
 }
