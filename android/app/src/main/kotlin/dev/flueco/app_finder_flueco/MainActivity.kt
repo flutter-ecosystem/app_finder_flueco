@@ -61,6 +61,57 @@ class MainActivity : FlutterActivity() {
                             packageManager.queryIntentActivities(launchIntent, 0)
                         }
 
+                val packageNames =
+                        activities
+                                .mapNotNull { it.activityInfo?.packageName }
+                                .toSet()
+                                .toMutableList()
+
+                val installedPackages =
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            packageManager.getInstalledApplications(
+                                    PackageManager.ApplicationInfoFlags.of(0)
+                            )
+                        } else {
+                            @Suppress("DEPRECATION")
+                            packageManager.getInstalledApplications(0)
+                        }
+
+                val appsFromPackages =
+                        installedPackages
+                                .asSequence()
+                                .filter { appInfo ->
+                                    val packageName = appInfo.packageName
+                                    packageName in packageNames || packageManager.getLaunchIntentForPackage(packageName) != null
+                                }
+                                .mapNotNull { appInfo ->
+                                    val packageName = appInfo.packageName
+                                    val launchableIntent = packageManager.getLaunchIntentForPackage(packageName)
+                                    if (launchableIntent == null) {
+                                        return@mapNotNull null
+                                    }
+
+                                    val applicationInfo = getApplicationInfo(packageManager, packageName)
+                                            ?: return@mapNotNull null
+
+                                    mapOf(
+                                            "name" to
+                                                    applicationInfo
+                                                            .loadLabel(packageManager)
+                                                            .toString(),
+                                            "packageName" to packageName,
+                                            "category" to categoryName(applicationInfo),
+                                            "isSystemApp" to isSystemApp(applicationInfo),
+                                            "icon" to
+                                                    drawableToPngBytes(
+                                                            applicationInfo.loadIcon(packageManager)
+                                                    ),
+                                            "launchActivity" to
+                                                    (launchableIntent.component?.className ?: "")
+                                    )
+                                }
+                                .toList()
+
                 val apps =
                         activities
                                 .mapNotNull { resolveInfo ->
