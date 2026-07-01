@@ -12,7 +12,6 @@ flutter run
 ## Notes importantes
 
 - Ciblage principal : Android.
-- `installed_apps` nécessite `QUERY_ALL_PACKAGES` pour voir toutes les apps sur Android 11+.
 - Pour une publication Play Store, créer un flavor sans cette permission ou justifier l'usage.
 - La recherche IA n'est pas obligatoire pour le MVP : le moteur actuel utilise scoring + synonymes + catégories Android + tags heuristiques.
 
