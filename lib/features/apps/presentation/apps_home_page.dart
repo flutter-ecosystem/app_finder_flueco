@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flueco/flueco.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -42,33 +43,33 @@ class _AppsHomeView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('App Finder'),
+        title: Text('app_title'.tr()),
         actions: [
           PopupMenuButton<AppSortOption>(
-            tooltip: 'Trier les apps',
+            tooltip: 'sort_apps'.tr(),
             icon: const Icon(Icons.sort_rounded),
             onSelected: controller.updateSort,
-            itemBuilder: (context) => const [
+            itemBuilder: (context) => [
               PopupMenuItem(
                 value: AppSortOption.nameAsc,
-                child: Text('Nom A→Z'),
+                child: Text('sort_name_asc'.tr()),
               ),
               PopupMenuItem(
                 value: AppSortOption.nameDesc,
-                child: Text('Nom Z→A'),
+                child: Text('sort_name_desc'.tr()),
               ),
               PopupMenuItem(
                 value: AppSortOption.dateAsc,
-                child: Text('Date ↑'),
+                child: Text('sort_date_asc'.tr()),
               ),
               PopupMenuItem(
                 value: AppSortOption.dateDesc,
-                child: Text('Date ↓'),
+                child: Text('sort_date_desc'.tr()),
               ),
             ],
           ),
           IconButton(
-            tooltip: 'Recharger',
+            tooltip: 'refresh'.tr(),
             onPressed: controller.isLoading ? null : controller.load,
             icon: const Icon(Icons.refresh_rounded),
           ),
@@ -82,7 +83,9 @@ class _AppsHomeView extends StatelessWidget {
             children: [
               const SizedBox(height: 6),
               Text(
-                '${controller.allApps.length} apps détectées · recherche par nom, catégorie ou utilité',
+                '${'apps_detected'.tr(namedArgs: {
+                      'count': controller.allApps.length.toString()
+                    })} · ${'search_description'.tr()}',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: 22),
@@ -92,10 +95,10 @@ class _AppsHomeView extends StatelessWidget {
                 borderRadius: 22,
                 child: TextField(
                   onChanged: controller.updateQuery,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: InputBorder.none,
                     icon: Icon(Icons.search_rounded),
-                    hintText: 'Ex: Spot, musique, navigation, banque...',
+                    hintText: 'search_hint'.tr(),
                   ),
                 ),
               ),
@@ -105,9 +108,9 @@ class _AppsHomeView extends StatelessWidget {
                 const Expanded(
                     child: Center(child: CircularProgressIndicator()))
               else if (controller.results.isEmpty)
-                const Expanded(
+                Expanded(
                   child: Center(
-                    child: Text('Aucune app trouvée. Essaie un autre mot-clé.'),
+                    child: Text('empty_state'.tr()),
                   ),
                 )
               else

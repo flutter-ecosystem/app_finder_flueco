@@ -1,0 +1,13 @@
+{
+    "app_title": "App Finder",
+    "refresh": "Refresh",
+    "sort_apps": "Sort apps",
+    "sort_name_asc": "Name A→Z",
+    "sort_name_desc": "Name Z→A",
+    "sort_date_asc": "Date ↑",
+    "sort_date_desc": "Date ↓",
+    "apps_detected": "{count} apps detected",
+    "search_hint": "Ex: Spot, music, navigation, banking...",
+    "empty_state": "No app found. Try another keyword.",
+    "search_description": "Search by name, category or utility"
+}

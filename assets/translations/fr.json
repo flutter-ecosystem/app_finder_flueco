@@ -1,0 +1,13 @@
+{
+    "app_title": "App Finder",
+    "refresh": "Recharger",
+    "sort_apps": "Trier les apps",
+    "sort_name_asc": "Nom A→Z",
+    "sort_name_desc": "Nom Z→A",
+    "sort_date_asc": "Date ↑",
+    "sort_date_desc": "Date ↓",
+    "apps_detected": "{count} apps détectées",
+    "search_hint": "Ex : Spot, musique, navigation, banque…",
+    "empty_state": "Aucune app trouvée. Essaie un autre mot-clé.",
+    "search_description": "Recherche par nom, catégorie ou utilité"
+}

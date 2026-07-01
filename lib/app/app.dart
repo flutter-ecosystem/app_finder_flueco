@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flueco/flueco.dart';
 import 'package:flutter/material.dart';
 import '../features/apps/presentation/apps_home_page.dart';
@@ -16,6 +17,9 @@ class AppFinderApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'App Finder',
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
         theme: buildNightNeumorphicTheme(),
         home: const AppsHomePage(),
       ),

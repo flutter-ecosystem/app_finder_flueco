@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  easy_localization: ^3.0.0
   flueco: ^0.0.1-alpha.6
   provider: ^6.1.2
   diacritic: ^0.1.6
@@ -22,3 +23,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/translations/
