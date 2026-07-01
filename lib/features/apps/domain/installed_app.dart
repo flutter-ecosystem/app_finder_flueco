@@ -8,6 +8,8 @@ class InstalledApp {
     required this.utilityTags,
     this.icon,
     this.isSystemApp = false,
+    this.installedAt,
+    this.updatedAt,
   });
 
   final String name;
@@ -16,6 +18,8 @@ class InstalledApp {
   final List<String> utilityTags;
   final Uint8List? icon;
   final bool isSystemApp;
+  final DateTime? installedAt;
+  final DateTime? updatedAt;
 
   String get searchableText => [
         name,

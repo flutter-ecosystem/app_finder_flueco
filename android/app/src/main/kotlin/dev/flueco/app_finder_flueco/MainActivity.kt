@@ -3,6 +3,7 @@ package dev.flueco.app_finder_flueco
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.content.pm.PackageInfo
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
@@ -93,6 +94,7 @@ class MainActivity : FlutterActivity() {
 
                                     val applicationInfo = getApplicationInfo(packageManager, packageName)
                                             ?: return@mapNotNull null
+                                    val packageInfo = getPackageInfo(packageManager, packageName)
 
                                     mapOf(
                                             "name" to
@@ -107,7 +109,9 @@ class MainActivity : FlutterActivity() {
                                                             applicationInfo.loadIcon(packageManager)
                                                     ),
                                             "launchActivity" to
-                                                    (launchableIntent.component?.className ?: "")
+                                                    (launchableIntent.component?.className ?: ""),
+                                            "installedAtMillis" to packageInfo?.firstInstallTime,
+                                            "updatedAtMillis" to packageInfo?.lastUpdateTime
                                     )
                                 }
                                 .toList()
@@ -124,6 +128,7 @@ class MainActivity : FlutterActivity() {
                                     val launchableIntent =
                                             packageManager.getLaunchIntentForPackage(packageName)
                                                     ?: return@mapNotNull null
+                                    val packageInfo = getPackageInfo(packageManager, packageName)
 
                                     mapOf(
                                             "name" to
@@ -138,7 +143,9 @@ class MainActivity : FlutterActivity() {
                                                             applicationInfo.loadIcon(packageManager)
                                                     ),
                                             "launchActivity" to
-                                                    (launchableIntent.component?.className ?: "")
+                                                    (launchableIntent.component?.className ?: ""),
+                                            "installedAtMillis" to packageInfo?.firstInstallTime,
+                                            "updatedAtMillis" to packageInfo?.lastUpdateTime
                                     )
                                 }
                                 .distinctBy { it["packageName"] as String }
@@ -176,6 +183,21 @@ class MainActivity : FlutterActivity() {
                 )
             } else {
                 @Suppress("DEPRECATION") packageManager.getApplicationInfo(packageName, 0)
+            }
+        } catch (_: PackageManager.NameNotFoundException) {
+            null
+        }
+    }
+
+    private fun getPackageInfo(packageManager: PackageManager, packageName: String): PackageInfo? {
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                packageManager.getPackageInfo(
+                        packageName,
+                        PackageManager.PackageInfoFlags.of(0)
+                )
+            } else {
+                @Suppress("DEPRECATION") packageManager.getPackageInfo(packageName, 0)
             }
         } catch (_: PackageManager.NameNotFoundException) {
             null

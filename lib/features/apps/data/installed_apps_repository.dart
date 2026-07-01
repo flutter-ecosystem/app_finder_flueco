@@ -4,10 +4,13 @@ import 'package:flutter/services.dart';
 import '../domain/installed_app.dart';
 
 class InstalledAppsRepository {
-  static const MethodChannel _channel = MethodChannel('app_finder_flueco/installed_apps');
+  static const MethodChannel _channel =
+      MethodChannel('app_finder_flueco/installed_apps');
 
   Future<List<InstalledApp>> loadApps() async {
-    final rawApps = await _channel.invokeListMethod<dynamic>('getInstalledApps') ?? const <dynamic>[];
+    final rawApps =
+        await _channel.invokeListMethod<dynamic>('getInstalledApps') ??
+            const <dynamic>[];
 
     final apps = rawApps
         .whereType<Map<dynamic, dynamic>>()
@@ -29,6 +32,8 @@ class InstalledAppsRepository {
     final packageName = (app['packageName'] as String?) ?? '';
     final category = (app['category'] as String?) ?? 'undefined';
     final icon = app['icon'];
+    final installedAtMillis = app['installedAtMillis'] as int?;
+    final updatedAtMillis = app['updatedAtMillis'] as int?;
 
     return InstalledApp(
       name: name,
@@ -36,14 +41,23 @@ class InstalledAppsRepository {
       category: category,
       icon: icon is Uint8List ? icon : null,
       isSystemApp: (app['isSystemApp'] as bool?) ?? false,
+      installedAt: installedAtMillis != null
+          ? DateTime.fromMillisecondsSinceEpoch(installedAtMillis)
+          : null,
+      updatedAt: updatedAtMillis != null
+          ? DateTime.fromMillisecondsSinceEpoch(updatedAtMillis)
+          : null,
       utilityTags: _inferUtilityTags(name, packageName, category),
     );
   }
 
-  List<String> _inferUtilityTags(String name, String packageName, String category) {
+  List<String> _inferUtilityTags(
+      String name, String packageName, String category) {
     final normalizedCategory = category.toLowerCase();
     final text = '$name $packageName $normalizedCategory'.toLowerCase();
-    final tags = <String>{if (normalizedCategory != 'undefined') normalizedCategory};
+    final tags = <String>{
+      if (normalizedCategory != 'undefined') normalizedCategory
+    };
 
     void addIf(bool condition, List<String> values) {
       if (condition) tags.addAll(values);
@@ -55,7 +69,15 @@ class InstalledAppsRepository {
           text.contains('music') ||
           text.contains('podcast') ||
           normalizedCategory == 'audio',
-      ['musique', 'audio', 'son', 'playlist', 'podcast', 'écouter', 'streaming audio'],
+      [
+        'musique',
+        'audio',
+        'son',
+        'playlist',
+        'podcast',
+        'écouter',
+        'streaming audio'
+      ],
     );
     addIf(
       text.contains('youtube') ||

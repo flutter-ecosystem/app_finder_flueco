@@ -39,13 +39,6 @@ class AppSearchEngine {
             .where((app) => aiFilteredPackageNames.contains(app.packageName))
             .toList();
 
-    if (candidateApps.isNotEmpty && aiFilteredPackageNames.isNotEmpty) {
-      return candidateApps
-          .map((app) => AppSearchResult(
-              app: app, score: 0, reasons: const ['filtrage IA']))
-          .toList();
-    }
-
     final ruleBasedResults = _searchWithRules(candidateApps, query, rawQuery);
     final hasStrongMatch = ruleBasedResults.any(
       (result) => result.reasons
@@ -68,6 +61,15 @@ class AppSearchEngine {
                 !hasSemanticEnrichment &&
                 semanticTerms.length <= expandedTerms.length))) {
       return ruleBasedResults;
+    }
+
+    if (candidateApps.isNotEmpty &&
+        aiFilteredPackageNames.isNotEmpty &&
+        ruleBasedResults.isEmpty) {
+      return candidateApps
+          .map((app) => AppSearchResult(
+              app: app, score: 0, reasons: const ['filtrage IA']))
+          .toList();
     }
 
     return _searchWithSemanticFallback(

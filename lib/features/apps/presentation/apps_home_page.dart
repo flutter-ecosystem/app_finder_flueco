@@ -41,28 +41,45 @@ class _AppsHomeView extends StatelessWidget {
     final controller = context.watch<AppsController>();
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('App Finder'),
+        actions: [
+          PopupMenuButton<AppSortOption>(
+            tooltip: 'Trier les apps',
+            icon: const Icon(Icons.sort_rounded),
+            onSelected: controller.updateSort,
+            itemBuilder: (context) => const [
+              PopupMenuItem(
+                value: AppSortOption.nameAsc,
+                child: Text('Nom A→Z'),
+              ),
+              PopupMenuItem(
+                value: AppSortOption.nameDesc,
+                child: Text('Nom Z→A'),
+              ),
+              PopupMenuItem(
+                value: AppSortOption.dateAsc,
+                child: Text('Date ↑'),
+              ),
+              PopupMenuItem(
+                value: AppSortOption.dateDesc,
+                child: Text('Date ↓'),
+              ),
+            ],
+          ),
+          IconButton(
+            tooltip: 'Recharger',
+            onPressed: controller.isLoading ? null : controller.load,
+            icon: const Icon(Icons.refresh_rounded),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  const Expanded(
-                    child: Text(
-                      'App Finder',
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
-                    ),
-                  ),
-                  IconButton(
-                    tooltip: 'Recharger',
-                    onPressed: controller.isLoading ? null : controller.load,
-                    icon: const Icon(Icons.refresh_rounded),
-                  ),
-                ],
-              ),
               const SizedBox(height: 6),
               Text(
                 '${controller.allApps.length} apps détectées · recherche par nom, catégorie ou utilité',
@@ -83,6 +100,7 @@ class _AppsHomeView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
+              const SizedBox(height: 12),
               if (controller.isLoading)
                 const Expanded(
                     child: Center(child: CircularProgressIndicator()))
